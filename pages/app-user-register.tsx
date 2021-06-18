@@ -13,14 +13,51 @@ const UserRegister: React.FC<UserRegisterProps> = () => {
   const [serverMessage, setServerMessage] = React.useState("");
   const handleCreateUser = async (e: any) => {
     e.preventDefault();
-    const body = {
-      firstName,
-      lastName,
-      phoneNumber,
-      email,
-      password,
-      confirmPassword,
-    };
+    const body =
+      password !== confirmPassword
+        ? setServerMessage("Password does not match")
+        : password.length < 4
+        ? setServerMessage("password minimum 4 chars")
+        : email.includes("@") &&
+          email.includes(".") &&
+          !email.includes("@.") &&
+          !email.includes(".@") &&
+          email.indexOf("@") < email.indexOf(".") &&
+          email.split(".")[1].trim() !== "" &&
+          (() => {
+            let flag = true;
+            [
+              "!",
+              "#",
+              ",",
+              "$",
+              "%",
+              "^",
+              "*",
+              "(",
+              ")",
+              "{",
+              "}",
+              '"',
+              "'",
+              "/",
+            ].forEach((s) => {
+              if (email.indexOf(s) !== -1) {
+                flag = false;
+                console.log("index of ---> ", email.indexOf(s), s);
+              }
+            });
+            return flag;
+          })()
+        ? {
+            firstName,
+            lastName,
+            phoneNumber,
+            email,
+            password,
+            confirmPassword,
+          }
+        : setServerMessage("email format is not correct");
     const serverResponse = await fetch("http://localhost:3000/api/users", {
       method: "POST",
       headers: {
@@ -82,7 +119,7 @@ const UserRegister: React.FC<UserRegisterProps> = () => {
             width={192}
             height={176}
             className={styles.image}
-            objectPosition="contain"
+            // objectPosition="contain"
           />
         </div>
         <Image
