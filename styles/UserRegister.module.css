@@ -62,6 +62,25 @@
   border-radius: 3px;
   font-family: sans-serif;
 }
+.inputNumber{
+  border: none;
+  user-select: none;
+  background-color: #d3d2e6;
+  padding: 4px 0 2px 12px;
+  height: 30px;
+  outline: none;
+  color: #0c0850;
+  width: 100%;
+  border-radius: 3px;
+  font-family: sans-serif;
+}
+ /* Chrome, Safari, Edge, Opera */
+.inputNumber::-webkit-outer-spin-button,
+.inputNumber::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+  appearance: 0;
+}
 .register_btn{
   background: linear-gradient(to right,#0c0850 0%, #0c0850 50%,#a506e4 100%);
   background-size: 500%;
@@ -78,7 +97,7 @@
 .register_btn:hover{
   cursor: pointer;
   animation-name: gradient;
-  animation-duration: 2s;
+  animation-duration: .4s;
   animation-fill-mode: forwards;
 }
 

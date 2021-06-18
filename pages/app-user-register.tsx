@@ -1,22 +1,92 @@
 import styles from "../styles/UserRegister.module.css";
 import Image from "next/image";
+import React from "react";
 export interface UserRegisterProps {}
 
 const UserRegister: React.FC<UserRegisterProps> = () => {
+  const [firstName, setFirstName] = React.useState("");
+  const [lastName, setLastName] = React.useState("");
+  const [phoneNumber, setPhoneNumber] = React.useState<number | string>();
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [confirmPassword, setConfirmPassword] = React.useState("");
+  const [serverMessage, setServerMessage] = React.useState("");
+  const handleCreateUser = async (e: any) => {
+    e.preventDefault();
+    const body = {
+      firstName,
+      lastName,
+      phoneNumber,
+      email,
+      password,
+      confirmPassword,
+    };
+    const serverResponse = await fetch("http://localhost:3000/api/users", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+    const data = await serverResponse.json();
+    console.log("user details sent ", data);
+    setServerMessage(data.message);
+    setFirstName("");
+    setLastName("");
+    setPhoneNumber("");
+    setEmail("");
+    setPassword("");
+    setConfirmPassword("");
+  };
+  const ServerMessage = () => {
+    setTimeout(() => {
+      setServerMessage("");
+    }, 3000);
+    return (
+      <div
+        style={{
+          position: "absolute",
+          top: 10,
+          right: 10,
+          width: 230,
+          height: 40,
+          backgroundColor: "#0c0850",
+          color: "white",
+          fontSize: 18,
+          fontWeight: 400,
+          flex: 1,
+          textAlign: "center",
+          borderRadius: 7,
+          paddingTop: 6,
+        }}
+      >
+        {serverMessage}
+      </div>
+    );
+  };
   return (
     <div style={{ display: "flex", justifyContent: "space-between" }}>
       <div style={{ display: "flex", flexDirection: "column" }}>
-        <Image
-          src="/pacira.png"
-          // style={{ flex: 0.1 }}
-          alt="Pacria Logo"
-          width={192}
-          height={176}
-          className={styles.image}
-        />
+        <div
+          style={{
+            width: 190,
+            height: 130,
+            alignSelf: "center",
+            marginBottom: 30,
+          }}
+        >
+          <Image
+            src="/pacira.png"
+            alt="Pacria Logo"
+            width={192}
+            height={176}
+            className={styles.image}
+            objectPosition="contain"
+          />
+        </div>
         <Image
           src="/image_1.png"
-          // style={{ flex: 0.1 }}
           alt="Pacria Logo"
           width={472}
           height={386}
@@ -24,6 +94,7 @@ const UserRegister: React.FC<UserRegisterProps> = () => {
         />
       </div>
       <div className={styles.formContainer}>
+        {serverMessage ? <ServerMessage /> : ""}
         <div className={styles.card}>
           <div className={styles.heading}>Purchaser Registration</div>
           <div>
@@ -44,6 +115,8 @@ const UserRegister: React.FC<UserRegisterProps> = () => {
                     type="text"
                     placeholder="First name"
                     name="firstName"
+                    value={firstName}
+                    onChange={(e: any) => setFirstName(e.target.value)}
                   />
                 </div>
                 <div style={{ flex: 0.48 }}>
@@ -52,6 +125,8 @@ const UserRegister: React.FC<UserRegisterProps> = () => {
                     type="text"
                     placeholder="Last name"
                     name="lastName"
+                    value={lastName}
+                    onChange={(e: any) => setLastName(e.target.value)}
                   />
                 </div>
               </div>
@@ -59,10 +134,12 @@ const UserRegister: React.FC<UserRegisterProps> = () => {
             <div className={styles.inputP}>
               <label className={styles.label}>Phone number</label>
               <input
-                className={styles.input}
+                className={styles.inputNumber}
                 type="number"
                 placeholder="Phone Number"
                 name="phoneNumber"
+                value={phoneNumber}
+                onChange={(e: any) => setPhoneNumber(e.target.value)}
               />
             </div>
             <div className={styles.inputP}>
@@ -71,7 +148,9 @@ const UserRegister: React.FC<UserRegisterProps> = () => {
                 className={styles.input}
                 type="text"
                 placeholder="Email"
-                name="phoneNumber"
+                name="email"
+                value={email}
+                onChange={(e: any) => setEmail(e.target.value)}
               />
             </div>
             <div className={styles.inputP}>
@@ -79,8 +158,10 @@ const UserRegister: React.FC<UserRegisterProps> = () => {
               <input
                 className={styles.input}
                 type="text"
-                placeholder="password"
+                placeholder="Password"
                 name="min 8 characters"
+                value={password}
+                onChange={(e: any) => setPassword(e.target.value)}
               />
             </div>
             <div className={styles.inputP}>
@@ -90,9 +171,13 @@ const UserRegister: React.FC<UserRegisterProps> = () => {
                 type="text"
                 placeholder="Confirm password"
                 name="phoneNumber"
+                value={confirmPassword}
+                onChange={(e: any) => setConfirmPassword(e.target.value)}
               />
             </div>
-            <button className={styles.register_btn}>Register</button>
+            <button className={styles.register_btn} onClick={handleCreateUser}>
+              Register
+            </button>
           </div>
         </div>
       </div>
@@ -101,3 +186,9 @@ const UserRegister: React.FC<UserRegisterProps> = () => {
 };
 
 export default UserRegister;
+
+// export const getServerSideProps = ({context}: any) => {
+//   console.log("context ---> ", context)
+//   const user = "ds"
+//   return {props: {context}}
+// }
